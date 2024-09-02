@@ -69,7 +69,7 @@ end
 
 ---@param buf? number
 ---@return string[]?
-function M.get_kind_filter(buf)
+M.get_kind_filter = function(buf)
 	buf = (buf == nil or buf == 0) and vim.api.nvim_get_current_buf() or buf
 	local ft = vim.bo[buf].filetype
 	if M.kind_filter == false then
@@ -87,7 +87,7 @@ end
 
 -- Fast implementation to check if a table is a list
 ---@param t table
-function M.is_list(t)
+M.is_list = function(t)
 	local i = 0
 	---@diagnostic disable-next-line: no-unknown
 	for _ in pairs(t) do

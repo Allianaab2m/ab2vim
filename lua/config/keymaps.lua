@@ -1,8 +1,83 @@
-local M = setmetatable({}, {
-	__call = function(m)
-		return m.set()
-	end,
-})
+local M = {}
+
+local map = vim.keymap.set
+
+map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
+map({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { desc = "Down", expr = true, silent = true })
+map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
+map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { desc = "Up", expr = true, silent = true })
+
+-- Move to window using the <ctrl> hjkl keys
+map("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
+map("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
+map("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
+map("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+
+-- Resize window using <ctrl> arrow keys
+map("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
+map("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
+map("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
+map("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
+
+map("i", "jj", "<Esc>", { desc = "Esc" })
+map("i", "JJ", "<Esc>", { desc = "Esc" })
+map("i", "jk", "<Esc>", { desc = "Esc" })
+map("i", "JK", "<Esc>", { desc = "Esc" })
+map("i", "kj", "<Esc>", { desc = "Esc" })
+map("i", "KJ", "<Esc>", { desc = "Esc" })
+
+map("n", "<S-h>", "<Cmd>bprev<CR>", { desc = "Prev buffer" })
+map("n", "<S-l>", "<Cmd>bprev<CR>", { desc = "Prev buffer" })
+
+map("n", "<leader>gg", function()
+	require("utils.lazygit")({ cwd = require("utils.root").git() })
+end, { desc = "Lazygit (Root Dir)" })
+map("n", "<leader>gG", function()
+	require("utils.lazygit")()
+end, { desc = "Lazygit (cwd)" })
+-- map("n", "<leader>gb", LazyVim.lazygit.blame_line, { desc = "Git Blame Line" })
+-- map("n", "<leader>gB", LazyVim.lazygit.browse, { desc = "Git Browse" })
+map("n", "<leader>gf", function()
+	local git_path = vim.api.nvim_buf_get_name(0)
+	require("utils.lazygit")({ args = { "-f", vim.trim(git_path) } })
+end, { desc = "Lazygit current file history" })
+map("n", "<leader>gl", function()
+	require("utils.lazygit")({ args = { "log" }, cwd = require("utils.root").git() })
+end, { desc = "Lazygit log" })
+map("n", "<leader>gL", function()
+	require("utils.lazygit")({ args = { "log" } })
+end, { desc = "Lazygit log (cwd)" })
+
+map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and Clear hlsearch" })
+
+map("n", "[q", vim.cmd.cprev, { desc = "Previous Quickfix" })
+map("n", "]q", vim.cmd.cnext, { desc = "Next Quickfix" })
+
+-- floating terminal
+local term = function()
+	require("utils.term")(nil, { cwd = require("utils.root")() })
+end
+map("n", "<leader>ft", term, { desc = "Terminal (Root Dir)" })
+map("n", "<leader>fT", function()
+	require("utils.term")()
+end, { desc = "Terminal (cwd)" })
+map("n", "<c-/>", term, { desc = "Terminal (Root Dir)" })
+map("n", "<c-_>", term, { desc = "which_key_ignore" })
+
+-- Terminal Mappings
+map("t", "<esc><esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
+map("t", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to Left Window" })
+map("t", "<C-j>", "<cmd>wincmd j<cr>", { desc = "Go to Lower Window" })
+map("t", "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to Upper Window" })
+map("t", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to Right Window" })
+map("t", "<C-/>", "<cmd>close<cr>", { desc = "Hide Terminal" })
+map("t", "<c-_>", "<cmd>close<cr>", { desc = "which_key_ignore" })
+
+-- windows
+map("n", "<leader>w", "<c-w>", { desc = "Windows", remap = true })
+map("n", "<leader>-", "<C-W>s", { desc = "Split Window Below", remap = true })
+map("n", "<leader>|", "<C-W>v", { desc = "Split Window Right", remap = true })
+map("n", "<leader>wd", "<C-W>c", { desc = "Delete Window", remap = true })
 
 M.lsp = {
 	{ "<leader>li", "<cmd>LspInfo<cr>", desc = "Lsp Info" },
@@ -37,15 +112,6 @@ M.lsp = {
 	-- { "<leader>cA", require("utils.lsp").action.source, desc = "Source Action", has = "codeAction" },
 }
 
-M.editor = {
-	{ "jj", "<Esc>", mode = { "i" } },
-	{ "JJ", "<Esc>", mode = { "i" } },
-	{ "jk", "<Esc>", mode = { "i" } },
-	{ "JK", "<Esc>", mode = { "i" } },
-	{ "kj", "<Esc>", mode = { "i" } },
-	{ "KJ", "<Esc>", mode = { "i" } },
-}
-
 ---@param method string|string[]
 M.has = function(buffer, method)
 	if type(method) == "table" then
@@ -64,12 +130,6 @@ M.has = function(buffer, method)
 		end
 	end
 	return false
-end
-
-M.set = function()
-	for _, keys in pairs(M.editor) do
-		vim.keymap.set(keys.mode or "n", keys[1], keys[2])
-	end
 end
 
 M.on_attach = function(_, buffer)

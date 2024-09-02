@@ -6,6 +6,9 @@ return {
 		config = function()
 			local colors = require("obscure.palettes").get_palette("obscure")
 			require("obscure").setup({
+				styles = {
+					comments = { italic = true },
+				},
 				highlight_overrides = {
 					CmpItemAbbrDeprecated = { fg = colors.gray3, bg = "NONE", strikethrough = true },
 					CmpItemAbbrMatch = { fg = colors.blue, bg = "NONE", bold = true },

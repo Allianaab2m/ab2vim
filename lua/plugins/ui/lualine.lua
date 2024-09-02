@@ -166,8 +166,14 @@ return {
 		})
 
 		ins_left({
-			"progress",
-			color = { fg = colors.fg },
+			"diff",
+			symbols = icons.git,
+			cond = conditions.hide_in_width,
+			diff_color = {
+				added = { fg = colors.green },
+				modified = { fg = colors.orange },
+				removed = { fg = colors.red },
+			},
 		})
 
 		ins_left({
@@ -187,17 +193,6 @@ return {
 				color_error = { fg = colors.red },
 				color_warn = { fg = colors.yellow },
 				color_info = { fg = colors.cyan },
-			},
-		})
-
-		ins_right({
-			"diff",
-			symbols = icons.git,
-			cond = conditions.hide_in_width,
-			diff_color = {
-				added = { fg = colors.green },
-				modified = { fg = colors.orange },
-				removed = { fg = colors.red },
 			},
 		})
 
@@ -223,6 +218,11 @@ return {
 		ins_right({
 			"location",
 			color = { fg = colors.green },
+		})
+
+		ins_right({
+			"progress",
+			color = { fg = colors.fg },
 		})
 
 		lualine.setup(config)

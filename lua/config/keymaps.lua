@@ -24,7 +24,16 @@ M.lsp = {
 	-- 	mode = { "n" },
 	-- 	has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
 	-- },
-	{ "<leader>lr", vim.lsp.buf.rename, desc = "Rename", has = "rename" },
+	{
+		"<leader>lr",
+		function()
+			local inc_rename = require("inc_rename")
+			return ":" .. inc_rename.config.cmd_name .. " " .. vim.fn.expand("<cword>")
+		end,
+		expr = true,
+		desc = "Rename",
+		has = "rename",
+	},
 	-- { "<leader>cA", require("utils.lsp").action.source, desc = "Source Action", has = "codeAction" },
 }
 
@@ -75,7 +84,7 @@ M.on_attach = function(_, buffer)
 			opts.has = nil
 			opts.silent = opts.silent ~= false
 			opts.buffer = buffer
-			vim.keymap.set(keys.mode or "n", keys[1], keys[2])
+			vim.keymap.set(keys.mode or "n", keys[1], keys[2], opts)
 		end
 	end
 end

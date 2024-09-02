@@ -29,6 +29,7 @@ require("lazy").setup({
 		{ import = "plugins.editor" },
 		{ import = "plugins.coding" },
 		{ import = "plugins.lsp" },
+		{ import = "plugins.language" },
 	},
 	install = { colorscheme = { "obscure" } },
 	checker = { enabled = true },

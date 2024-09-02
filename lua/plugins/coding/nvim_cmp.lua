@@ -3,7 +3,7 @@ return {
 	version = false,
 	event = "InsertEnter",
 	dependencies = {
-		-- "hrsh7th/cmp-nvim-lsp"
+		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-buffer",
 		"hrsh7th/cmp-path",
 	},
@@ -35,7 +35,7 @@ return {
 					{ "i" }
 				),
 				["<C-f>"] = cmp.mapping(cmp.mapping.confirm(), { "i", "c" }),
-				["<CR>"] = require("utils.cmp").confirm({ select = false }),
+				["<CR>"] = require("utils.cmp").confirm({ select = true }),
 				["<Tab>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.select_next_item()
@@ -62,7 +62,7 @@ return {
 				end, { "i", "s" }),
 			},
 			sources = cmp.config.sources({
-				-- { name = "nvim_lsp" },
+				{ name = "nvim_lsp" },
 				{ name = "path" },
 			}, {
 				{ name = "buffer" },

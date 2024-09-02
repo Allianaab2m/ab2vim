@@ -1,6 +1,9 @@
 return {
 	"folke/noice.nvim",
 	event = "VeryLazy",
+	dependencies = {
+		"MunifTanjim/nui.nvim",
+	},
 	opts = {
 		lsp = {
 			override = {
@@ -26,6 +29,7 @@ return {
 			bottom_search = true,
 			command_palette = true,
 			long_message_to_split = true,
+			inc_rename = true,
 		},
 	},
   -- stylua: ignore
